@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talerang Career Readiness Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =====================================================
+       PUBLIC SCREENS (before login)
+       Only one "screen" is visible at a time. See script.js → showScreen()
+       ===================================================== -->
+  <div id="publicArea">
+    <header class="public-header">
+      <img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-public">
+    </header>
+
+    <main class="public-main">
+
+      <!-- WELCOME -->
+      <section id="screen-welcome" class="screen">
+        <h1>Career Readiness Portal</h1>
+        <p class="lead">Your Talerang career readiness portal. Track your progress from homework to your first internship in one place.</p>
+
+        <div class="choice-grid">
+          <div class="card choice-card">
+            <h2>Existing user</h2>
+            <p>Already have a Talerang account? Continue to your Career Readiness Portal.</p>
+            <button class="btn btn-primary" data-go="existing">Existing User</button>
+            <button class="btn btn-link" data-go="login">I already set up my login</button>
+          </div>
+          <div class="card choice-card">
+            <h2>New user</h2>
+            <p>Create your Talerang account and begin your career readiness journey.</p>
+            <button class="btn btn-primary" data-go="new">New User</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXISTING USER: STEP 1 (email) -->
+      <section id="screen-existing" class="screen narrow">
+        <div class="card form-card">
+          <h1>Welcome back</h1>
+          <p>Enter the email address registered with Talerang.</p>
+          <form id="existingForm" novalidate>
+            <label for="existingEmail">Email address</label>
+            <input type="email" id="existingEmail" autocomplete="email">
+            <p class="form-message" id="existingMessage" role="alert"></p>
+            <div class="button-row">
+              <button type="submit" class="btn btn-primary">Continue</button>
+              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- EXISTING USER: STEP 2 (set username + password) -->
+      <section id="screen-setup" class="screen narrow">
+        <div class="card form-card">
+          <h1>Set up your account</h1>
+          <p id="setupIntro">Choose a username and password.</p>
+          <form id="setupForm" novalidate>
+            <label for="setupUsername">Username</label>
+            <input type="text" id="setupUsername" autocomplete="username">
+            <label for="setupPassword">Password</label>
+            <input type="password" id="setupPassword" autocomplete="new-password">
+            <label for="setupConfirm">Confirm password</label>
+            <input type="password" id="setupConfirm" autocomplete="new-password">
+            <p class="form-message" id="setupMessage" role="alert"></p>
+            <div class="button-row">
+              <button type="submit" class="btn btn-primary">Create Account</button>
+              <button type="button" class="btn btn-secondary" data-go="existing">Back</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- NEW USER -->
+      <section id="screen-new" class="screen narrow">
+        <div class="card form-card">
+          <h1>Create your Talerang account</h1>
+          <form id="registerForm" novalidate>
+            <label for="regName">Full name</label>
+            <input type="text" id="regName" autocomplete="name">
+            <label for="regEmail">Email</label>
+            <input type="email" id="regEmail" autocomplete="email">
+            <label for="regUsername">Username</label>
+            <input type="text" id="regUsername" autocomplete="username">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" autocomplete="new-password">
+            <label for="regConfirm">Confirm password</label>
+            <input type="password" id="regConfirm" autocomplete="new-password">
+            <p class="form-message" id="registerMessage" role="alert"></p>
+            <div class="button-row">
+              <button type="submit" class="btn btn-primary">Create Account</button>
+              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- LOGIN -->
+      <section id="screen-login" class="screen narrow">
+        <div class="card form-card">
+          <h1>Log in</h1>
+          <form id="loginForm" novalidate>
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" autocomplete="email">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" autocomplete="current-password">
+            <p class="form-message" id="loginMessage" role="alert"></p>
+            <div class="button-row">
+              <button type="submit" class="btn btn-primary">Login</button>
+              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+            </div>
+          </form>
+          <p class="demo-hint">Demo account for testing: <strong>student@talerang.com</strong> / <strong>123456</strong></p>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="public-footer">
+      Frontend prototype. Sign-in uses this browser's storage only and is not secure production authentication.
+    </footer>
+  </div>
+
+
+  <!-- =====================================================
+       LOGGED-IN AREA (dashboard + profile)
+       Hidden until a user is logged in.
+       ===================================================== -->
+  <div id="appArea" hidden>
+    <header class="app-header">
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">Menu</button>
+      <img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-app">
+    </header>
+
+    <div class="app-body">
+      <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+        <button class="nav-item active" data-section="dashboard">Dashboard</button>
+        <button class="nav-item" data-section="profile">My Profile</button>
+        <button class="nav-item" id="logoutButton">Logout</button>
+      </nav>
+
+      <main class="app-main">
+
+        <!-- DASHBOARD SECTION -->
+        <section id="section-dashboard">
+
+          <div class="card student-card">
+            <div class="avatar" id="dashAvatar"></div>
+            <div class="student-info">
+              <h1 id="dashName"></h1>
+              <p id="dashEmail"></p>
+              <p class="student-meta"><span id="dashBatchLine"></span></p>
+              <label class="btn btn-secondary btn-small photo-button">
+                Change photo
+                <input type="file" id="dashPhotoInput" accept="image/*" hidden>
+              </label>
+              <p class="form-message" id="dashPhotoMessage" role="alert"></p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="card stat"><span class="stat-label">Batch</span><span class="stat-value" id="statBatch"></span></div>
+            <div class="card stat"><span class="stat-label">Skill Track</span><span class="stat-value" id="statTrack"></span></div>
+            <div class="card stat"><span class="stat-label">Attendance</span><span class="stat-value" id="statAttendance"></span></div>
+            <div class="card stat"><span class="stat-label">Readiness Score</span><span class="stat-value" id="statReadiness"></span></div>
+          </div>
+
+          <div class="card">
+            <h2>Career Readiness</h2>
+            <div class="progress-head">
+              <span>Graduation Ready</span>
+              <strong id="progressPercent"></strong>
+            </div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Career Readiness Checklist</h2>
+            <ul class="checklist" id="checklist"></ul>
+          </div>
+        </section>
+
+        <!-- PROFILE SECTION -->
+        <section id="section-profile" hidden>
+          <div class="card">
+            <h1>My Profile</h1>
+            <div class="profile-photo-row">
+              <div class="avatar avatar-large" id="profAvatar"></div>
+              <div>
+                <label class="btn btn-secondary btn-small photo-button">
+                  Change photo
+                  <input type="file" id="profPhotoInput" accept="image/*" hidden>
+                </label>
+                <p class="form-message" id="profPhotoMessage" role="alert"></p>
+              </div>
+            </div>
+
+            <form id="profileForm" novalidate>
+              <label for="profName">Full name</label>
+              <input type="text" id="profName">
+              <label for="profUsername">Username</label>
+              <input type="text" id="profUsername">
+              <label for="profTrack">Skill track</label>
+              <select id="profTrack">
+                <option>Technology</option>
+                <option>Finance</option>
+                <option>Marketing</option>
+                <option>Operations</option>
+                <option>Consulting</option>
+              </select>
+
+              <label for="profEmail">Email</label>
+              <input type="email" id="profEmail" readonly>
+              <label for="profBatch">Batch</label>
+              <input type="text" id="profBatch" readonly>
+              <label for="profAttendance">Attendance</label>
+              <input type="text" id="profAttendance" readonly>
+              <label for="profReadiness">Readiness score</label>
+              <input type="text" id="profReadiness" readonly>
+              <p class="field-note">Email, batch, attendance and readiness are read-only. They will come from Talerang's systems in future.</p>
+
+              <p class="form-message" id="profileMessage" role="alert"></p>
+              <div class="button-row">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       TASK VIEW (opens when a checklist "Start" button is clicked)
+       ===================================================== -->
+  <div class="modal-backdrop" id="taskModal" hidden>
+    <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="taskTitle">
+      <h2 id="taskTitle"></h2>
+      <p id="taskDescription"></p>
+      <h3>What you need to do</h3>
+      <ul id="taskSteps"></ul>
+      <p class="placeholder-note" id="taskPlaceholder"></p>
+      <div class="button-row">
+        <button class="btn btn-primary" id="taskCompleteButton">Mark as Complete</button>
+        <button class="btn btn-secondary" id="taskBackButton">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
