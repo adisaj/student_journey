@@ -3,54 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#222262">
   <title>Talerang Career Readiness Portal</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <!-- Fonts load from Google Fonts when online; the page falls back to system fonts offline. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- =====================================================
-       PUBLIC SCREENS (before login)
-       Only one "screen" is visible at a time. See script.js → showScreen()
+       ICONS (drawn once, reused with <use href="#i-name">)
        ===================================================== -->
-  <div id="publicArea">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 8l-4 4 4 4M6 12h10"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+  </svg>
+
+
+  <!-- =====================================================
+       PUBLIC SCREENS (before login)
+       Only one "screen" is visible at a time. See script.js → route()
+       ===================================================== -->
+  <div id="publicArea" class="public">
     <header class="public-header">
-      <img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-public">
+      <a href="#/welcome" class="logo-link"><img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-public"></a>
+      <div class="public-header-actions">
+        <button class="icon-button theme-toggle" type="button" aria-label="Switch to dark theme"><svg class="icon"><use href="#i-moon"/></svg></button>
+        <a href="#/login" class="btn btn-ghost" id="headerLogin">Log in</a>
+      </div>
     </header>
 
     <main class="public-main">
 
       <!-- WELCOME -->
-      <section id="screen-welcome" class="screen">
-        <h1>Career Readiness Portal</h1>
-        <p class="lead">Your Talerang career readiness portal. Track your progress from homework to your first internship in one place.</p>
+      <section id="screen-welcome" class="screen screen-welcome">
+        <div class="hero">
+          <h1 class="hero-title">From your first homework to your first internship.</h1>
+          <p class="lead">The Career Readiness Portal shows each of the six steps in your Future CEOs Program, what you've finished, and what to do next.</p>
+        </div>
+
+        <!-- The journey path is drawn by script.js → drawJourney() -->
+        <div class="journey journey-hero" id="heroJourney" aria-hidden="true"></div>
 
         <div class="choice-grid">
-          <div class="card choice-card">
-            <h2>Existing user</h2>
-            <p>Already have a Talerang account? Continue to your Career Readiness Portal.</p>
-            <button class="btn btn-primary" data-go="existing">Existing User</button>
-            <button class="btn btn-link" data-go="login">I already set up my login</button>
+          <div class="choice">
+            <h2>Already enrolled with Talerang?</h2>
+            <p>Your program team has registered your email. Set a username and password to open your portal.</p>
+            <div class="button-row">
+              <a href="#/existing" class="btn btn-primary">Set up my login</a>
+              <a href="#/login" class="btn btn-link">I've already set it up</a>
+            </div>
           </div>
-          <div class="card choice-card">
-            <h2>New user</h2>
-            <p>Create your Talerang account and begin your career readiness journey.</p>
-            <button class="btn btn-primary" data-go="new">New User</button>
+          <div class="choice">
+            <h2>New to Talerang?</h2>
+            <p>Create an account to start tracking your career readiness journey.</p>
+            <div class="button-row">
+              <a href="#/new" class="btn btn-secondary">Create an account</a>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- EXISTING USER: STEP 1 (email) -->
       <section id="screen-existing" class="screen narrow">
-        <div class="card form-card">
-          <h1>Welcome back</h1>
-          <p>Enter the email address registered with Talerang.</p>
+        <div class="form-panel">
+          <ol class="stepper" aria-label="Account setup progress">
+            <li class="current" aria-current="step">Find your account</li>
+            <li>Choose a login</li>
+          </ol>
+          <h1>Find your account</h1>
+          <p class="muted">Enter the email address you gave Talerang when you enrolled.</p>
           <form id="existingForm" novalidate>
             <label for="existingEmail">Email address</label>
-            <input type="email" id="existingEmail" autocomplete="email">
+            <input type="email" id="existingEmail" autocomplete="email" placeholder="you@college.edu">
             <p class="form-message" id="existingMessage" role="alert"></p>
             <div class="button-row">
               <button type="submit" class="btn btn-primary">Continue</button>
-              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+              <a href="#/welcome" class="btn btn-secondary">Back</a>
             </div>
           </form>
         </div>
@@ -58,20 +102,25 @@
 
       <!-- EXISTING USER: STEP 2 (set username + password) -->
       <section id="screen-setup" class="screen narrow">
-        <div class="card form-card">
-          <h1>Set up your account</h1>
-          <p id="setupIntro">Choose a username and password.</p>
+        <div class="form-panel">
+          <ol class="stepper" aria-label="Account setup progress">
+            <li class="done">Find your account</li>
+            <li class="current" aria-current="step">Choose a login</li>
+          </ol>
+          <h1>Choose a login</h1>
+          <p class="muted" id="setupIntro">Choose a username and password.</p>
           <form id="setupForm" novalidate>
             <label for="setupUsername">Username</label>
             <input type="text" id="setupUsername" autocomplete="username">
             <label for="setupPassword">Password</label>
-            <input type="password" id="setupPassword" autocomplete="new-password">
+            <input type="password" id="setupPassword" autocomplete="new-password" data-strength="setupStrength">
+            <div class="strength" id="setupStrength" aria-live="polite"></div>
             <label for="setupConfirm">Confirm password</label>
             <input type="password" id="setupConfirm" autocomplete="new-password">
             <p class="form-message" id="setupMessage" role="alert"></p>
             <div class="button-row">
-              <button type="submit" class="btn btn-primary">Create Account</button>
-              <button type="button" class="btn btn-secondary" data-go="existing">Back</button>
+              <button type="submit" class="btn btn-primary">Open my portal</button>
+              <a href="#/existing" class="btn btn-secondary">Back</a>
             </div>
           </form>
         </div>
@@ -79,31 +128,35 @@
 
       <!-- NEW USER -->
       <section id="screen-new" class="screen narrow">
-        <div class="card form-card">
-          <h1>Create your Talerang account</h1>
+        <div class="form-panel">
+          <h1>Create your account</h1>
+          <p class="muted">You'll join the Future CEOs Program. You'll choose your skill track later in the program.</p>
           <form id="registerForm" novalidate>
             <label for="regName">Full name</label>
             <input type="text" id="regName" autocomplete="name">
             <label for="regEmail">Email</label>
-            <input type="email" id="regEmail" autocomplete="email">
+            <input type="email" id="regEmail" autocomplete="email" placeholder="you@college.edu">
             <label for="regUsername">Username</label>
             <input type="text" id="regUsername" autocomplete="username">
             <label for="regPassword">Password</label>
-            <input type="password" id="regPassword" autocomplete="new-password">
+            <input type="password" id="regPassword" autocomplete="new-password" data-strength="regStrength">
+            <div class="strength" id="regStrength" aria-live="polite"></div>
             <label for="regConfirm">Confirm password</label>
             <input type="password" id="regConfirm" autocomplete="new-password">
             <p class="form-message" id="registerMessage" role="alert"></p>
             <div class="button-row">
-              <button type="submit" class="btn btn-primary">Create Account</button>
-              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+              <button type="submit" class="btn btn-primary">Create account</button>
+              <a href="#/welcome" class="btn btn-secondary">Back</a>
             </div>
           </form>
+          <p class="form-foot">Already have an account? <a href="#/login">Log in</a></p>
         </div>
       </section>
 
       <!-- LOGIN -->
-      <section id="screen-login" class="screen narrow">
-        <div class="card form-card">
+      <section id="screen-login" class="screen screen-login">
+        <div class="login-banner" role="img" aria-label="Get work-ready this year!"></div>
+        <div class="form-panel">
           <h1>Log in</h1>
           <form id="loginForm" novalidate>
             <label for="loginEmail">Email</label>
@@ -112,11 +165,14 @@
             <input type="password" id="loginPassword" autocomplete="current-password">
             <p class="form-message" id="loginMessage" role="alert"></p>
             <div class="button-row">
-              <button type="submit" class="btn btn-primary">Login</button>
-              <button type="button" class="btn btn-secondary" data-go="welcome">Back</button>
+              <button type="submit" class="btn btn-primary">Log in</button>
+              <a href="#/welcome" class="btn btn-secondary">Back</a>
             </div>
           </form>
-          <p class="demo-hint">Demo account for testing: <strong>student@talerang.com</strong> / <strong>123456</strong></p>
+          <div class="demo-hint">
+            <p>Testing the prototype? Use the demo account.</p>
+            <button type="button" class="btn btn-small btn-secondary" id="fillDemoButton">Fill in demo login</button>
+          </div>
         </div>
       </section>
 
@@ -132,130 +188,202 @@
        LOGGED-IN AREA (dashboard + profile)
        Hidden until a user is logged in.
        ===================================================== -->
-  <div id="appArea" hidden>
-    <header class="app-header">
-      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">Menu</button>
+  <div id="appArea" class="app" hidden>
+    <header class="app-topbar">
+      <button class="icon-button" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar"><svg class="icon"><use href="#i-menu"/></svg></button>
       <img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-app">
     </header>
 
-    <div class="app-body">
-      <nav class="sidebar" id="sidebar" aria-label="Main navigation">
-        <button class="nav-item active" data-section="dashboard">Dashboard</button>
-        <button class="nav-item" data-section="profile">My Profile</button>
-        <button class="nav-item" id="logoutButton">Logout</button>
-      </nav>
+    <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+      <img src="assets/talerang-logo.png" alt="Talerang Career Dreams" class="logo-sidebar">
+      <a href="#/dashboard" class="nav-item" data-section="dashboard"><svg class="icon"><use href="#i-home"/></svg>Dashboard</a>
+      <a href="#/profile" class="nav-item" data-section="profile"><svg class="icon"><use href="#i-user"/></svg>My profile</a>
+      <div class="sidebar-foot">
+        <button class="nav-item theme-toggle" type="button"><svg class="icon"><use href="#i-moon"/></svg><span class="theme-label">Dark theme</span></button>
+        <button class="nav-item" id="logoutButton" type="button"><svg class="icon"><use href="#i-logout"/></svg>Log out</button>
+        <div class="sidebar-user">
+          <div class="avatar avatar-small" id="sideAvatar"></div>
+          <div>
+            <strong id="sideName"></strong>
+            <span id="sideEmail"></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="scrim" id="scrim" hidden></div>
 
-      <main class="app-main">
+    <main class="app-main" id="appMain" tabindex="-1">
 
-        <!-- DASHBOARD SECTION -->
-        <section id="section-dashboard">
+      <!-- DASHBOARD SECTION -->
+      <section id="section-dashboard" class="app-section">
 
-          <div class="card student-card">
-            <div class="avatar" id="dashAvatar"></div>
-            <div class="student-info">
+        <div class="journey-band">
+          <div class="band-top">
+            <div class="band-intro">
+              <p class="greeting" id="dashGreeting"></p>
               <h1 id="dashName"></h1>
-              <p id="dashEmail"></p>
-              <p class="student-meta"><span id="dashBatchLine"></span></p>
-              <label class="btn btn-secondary btn-small photo-button">
-                Change photo
-                <input type="file" id="dashPhotoInput" accept="image/*" hidden>
-              </label>
-              <p class="form-message" id="dashPhotoMessage" role="alert"></p>
+              <p class="band-meta" id="dashBatchLine"></p>
+            </div>
+            <div class="ring" id="readinessRing" role="img">
+              <svg viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="ring-track" cx="60" cy="60" r="52"/>
+                <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"/>
+              </svg>
+              <div class="ring-text"><strong id="ringValue">0%</strong><span>Readiness</span></div>
             </div>
           </div>
 
-          <div class="stats-grid">
-            <div class="card stat"><span class="stat-label">Batch</span><span class="stat-value" id="statBatch"></span></div>
-            <div class="card stat"><span class="stat-label">Skill Track</span><span class="stat-value" id="statTrack"></span></div>
-            <div class="card stat"><span class="stat-label">Attendance</span><span class="stat-value" id="statAttendance"></span></div>
-            <div class="card stat"><span class="stat-label">Readiness Score</span><span class="stat-value" id="statReadiness"></span></div>
-          </div>
+          <div class="journey" id="dashJourney"></div>
 
-          <div class="card">
-            <h2>Career Readiness</h2>
-            <div class="progress-head">
-              <span>Graduation Ready</span>
-              <strong id="progressPercent"></strong>
-            </div>
-            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
-              <div class="progress-fill" id="progressFill"></div>
-            </div>
-          </div>
+          <div class="up-next" id="upNext"></div>
+        </div>
 
-          <div class="card">
-            <h2>Career Readiness Checklist</h2>
-            <ul class="checklist" id="checklist"></ul>
-          </div>
-        </section>
+        <div class="stats-row">
+          <div class="stat"><span class="stat-label">Attendance</span><span class="stat-value" id="statAttendance"></span><span class="meter"><span id="attendanceMeter"></span></span></div>
+          <div class="stat"><span class="stat-label">Steps completed</span><span class="stat-value" id="statSteps"></span><span class="meter"><span id="stepsMeter"></span></span></div>
+          <div class="stat"><span class="stat-label">Program</span><span class="stat-value" id="statBatch"></span></div>
+          <div class="stat"><span class="stat-label">Skill track</span><span class="stat-value" id="statTrack"></span></div>
+        </div>
 
-        <!-- PROFILE SECTION -->
-        <section id="section-profile" hidden>
-          <div class="card">
-            <h1>My Profile</h1>
-            <div class="profile-photo-row">
-              <div class="avatar avatar-large" id="profAvatar"></div>
-              <div>
-                <label class="btn btn-secondary btn-small photo-button">
-                  Change photo
-                  <input type="file" id="profPhotoInput" accept="image/*" hidden>
-                </label>
-                <p class="form-message" id="profPhotoMessage" role="alert"></p>
+        <div class="dash-columns">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Your six steps</h2>
+              <div class="filter" role="group" aria-label="Show steps">
+                <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                <button type="button" class="filter-btn" data-filter="todo" aria-pressed="false">To do</button>
+                <button type="button" class="filter-btn" data-filter="done" aria-pressed="false">Done</button>
               </div>
             </div>
+            <ol class="steps-list" id="checklist"></ol>
+            <p class="empty-note" id="checklistEmpty" hidden></p>
+          </div>
 
+          <div class="panel">
+            <h2>Recent activity</h2>
+            <ul class="activity" id="activityList"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE SECTION -->
+      <section id="section-profile" class="app-section" hidden>
+        <h1 class="page-title">My profile</h1>
+
+        <div class="panel profile-head">
+          <div class="avatar avatar-large" id="profAvatar"></div>
+          <div class="profile-head-text">
+            <h2 id="profHeadName"></h2>
+            <p class="muted" id="profHeadEmail"></p>
+            <div class="button-row">
+              <label class="btn btn-secondary btn-small photo-button">
+                <svg class="icon"><use href="#i-camera"/></svg>Change photo
+                <input type="file" id="profPhotoInput" accept="image/*" class="visually-hidden">
+              </label>
+              <button type="button" class="btn btn-link btn-small" id="removePhotoButton">Remove photo</button>
+            </div>
+            <p class="form-message" id="profPhotoMessage" role="alert"></p>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div class="panel">
+            <h2>Personal details</h2>
             <form id="profileForm" novalidate>
               <label for="profName">Full name</label>
-              <input type="text" id="profName">
+              <input type="text" id="profName" autocomplete="name">
               <label for="profUsername">Username</label>
-              <input type="text" id="profUsername">
+              <input type="text" id="profUsername" autocomplete="username">
               <label for="profTrack">Skill track</label>
-              <select id="profTrack">
+              <select id="profTrack" aria-describedby="trackNote">
+                <option value="">Not chosen yet</option>
                 <option>Technology</option>
                 <option>Finance</option>
                 <option>Marketing</option>
                 <option>Operations</option>
                 <option>Consulting</option>
               </select>
-
-              <label for="profEmail">Email</label>
-              <input type="email" id="profEmail" readonly>
-              <label for="profBatch">Batch</label>
-              <input type="text" id="profBatch" readonly>
-              <label for="profAttendance">Attendance</label>
-              <input type="text" id="profAttendance" readonly>
-              <label for="profReadiness">Readiness score</label>
-              <input type="text" id="profReadiness" readonly>
-              <p class="field-note">Email, batch, attendance and readiness are read-only. They will come from Talerang's systems in future.</p>
-
+              <p class="field-note" id="trackNote">You'll choose your skill track later in the program. Leave this as "Not chosen yet" until then.</p>
               <p class="form-message" id="profileMessage" role="alert"></p>
               <div class="button-row">
                 <button type="submit" class="btn btn-primary">Save changes</button>
               </div>
             </form>
           </div>
-        </section>
 
-      </main>
-    </div>
+          <div class="panel">
+            <h2>Programme details</h2>
+            <dl class="details">
+              <div><dt>Email</dt><dd id="profEmail"></dd></div>
+              <div><dt>Program</dt><dd id="profBatch"></dd></div>
+              <div><dt>Attendance</dt><dd id="profAttendance"></dd></div>
+              <div><dt>Readiness score</dt><dd id="profReadiness"></dd></div>
+            </dl>
+            <p class="field-note">These come from your Talerang program team, so you can't edit them here.</p>
+          </div>
+
+          <div class="panel">
+            <h2>Change password</h2>
+            <form id="passwordForm" novalidate>
+              <label for="pwCurrent">Current password</label>
+              <input type="password" id="pwCurrent" autocomplete="current-password">
+              <label for="pwNew">New password</label>
+              <input type="password" id="pwNew" autocomplete="new-password" data-strength="pwStrength">
+              <div class="strength" id="pwStrength" aria-live="polite"></div>
+              <label for="pwConfirm">Confirm new password</label>
+              <input type="password" id="pwConfirm" autocomplete="new-password">
+              <p class="form-message" id="passwordMessage" role="alert"></p>
+              <div class="button-row">
+                <button type="submit" class="btn btn-primary">Change password</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel">
+            <h2>Your data</h2>
+            <p class="muted">Download your profile, progress, notes and activity as a JSON file. Your password is not included.</p>
+            <div class="button-row">
+              <button type="button" class="btn btn-secondary" id="exportButton"><svg class="icon"><use href="#i-download"/></svg>Download my data</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
 
 
   <!-- =====================================================
-       TASK VIEW (opens when a checklist "Start" button is clicked)
+       TASK VIEW (opens when a step is clicked; URL #/dashboard/task/<key>)
        ===================================================== -->
   <div class="modal-backdrop" id="taskModal" hidden>
-    <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="taskTitle">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="taskTitle" id="taskDialog">
+      <button class="icon-button modal-close" id="taskCloseButton" aria-label="Close"><svg class="icon"><use href="#i-close"/></svg></button>
+      <p class="modal-kicker" id="taskKicker"></p>
       <h2 id="taskTitle"></h2>
       <p id="taskDescription"></p>
-      <h3>What you need to do</h3>
-      <ul id="taskSteps"></ul>
+      <div class="task-link" id="taskLink"></div>
+
+      <div class="substeps-head">
+        <h3>What you need to do</h3>
+        <span id="taskStepCount"></span>
+      </div>
+      <ul class="substeps" id="taskSteps"></ul>
+
+      <label for="taskNotes">Your notes</label>
+      <textarea id="taskNotes" rows="3" placeholder="Deadlines, links, questions for your mentor…"></textarea>
+      <p class="field-note" id="taskNotesStatus" aria-live="polite"></p>
+
       <p class="placeholder-note" id="taskPlaceholder"></p>
       <div class="button-row">
-        <button class="btn btn-primary" id="taskCompleteButton">Mark as Complete</button>
-        <button class="btn btn-secondary" id="taskBackButton">Back</button>
+        <button class="btn btn-primary" id="taskCompleteButton">Mark as complete</button>
+        <button class="btn btn-secondary" id="taskBackButton">Close</button>
       </div>
     </div>
   </div>
+
+  <!-- Toast messages appear here -->
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
   <script src="script.js"></script>
 </body>
